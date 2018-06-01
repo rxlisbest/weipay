@@ -14,5 +14,7 @@
             "rxlisbest\\weipay\\": "src"
         }
     },
-    "require": {}
+    "require": {
+        "anlutro/curl": "^1.4"
+    }
 }
