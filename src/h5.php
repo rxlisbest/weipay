@@ -1,5 +1,7 @@
 <?php
 namespace rxlisbest\weipay;
+
+use anlutro\cURL\cURL;
 /**
  * Created by PhpStorm.
  * User: ruixinglong
@@ -88,7 +90,8 @@ class h5
             'scene_info'=>json_encode($scene_info)
         );
         $unified['sign'] = self::getSign($unified, $config['key']);
-        $responseXml = self::curlPost('https://api.mch.weixin.qq.com/pay/unifiedorder', self::arrayToXml($unified));
+        $curl = new cURL();
+        $responseXml = $curl->rawPost('https://api.mch.weixin.qq.com/pay/unifiedorder', self::arrayToXml($unified));
         $unifiedOrder = simplexml_load_string($responseXml, 'SimpleXMLElement', LIBXML_NOCDATA);
         if ($unifiedOrder->return_code != 'SUCCESS') {
             die($unifiedOrder->return_msg);
@@ -99,27 +102,27 @@ class h5
         exit('error');
     }
 
-    public static function curlPost($url = '', $postData = '', $options = array())
-    {
-        if (is_array($postData)) {
-            $postData = http_build_query($postData);
-        }
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30); //设置cURL允许执行的最长秒数
-        if (!empty($options)) {
-            curl_setopt_array($ch, $options);
-        }
-        //https请求 不验证证书和host
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        return $data;
-    }
+//    public static function curlPost($url = '', $postData = '', $options = array())
+//    {
+//        if (is_array($postData)) {
+//            $postData = http_build_query($postData);
+//        }
+//        $ch = curl_init();
+//        curl_setopt($ch, CURLOPT_URL, $url);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//        curl_setopt($ch, CURLOPT_POST, 1);
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+//        curl_setopt($ch, CURLOPT_TIMEOUT, 30); //设置cURL允许执行的最长秒数
+//        if (!empty($options)) {
+//            curl_setopt_array($ch, $options);
+//        }
+//        //https请求 不验证证书和host
+//        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+//        $data = curl_exec($ch);
+//        curl_close($ch);
+//        return $data;
+//    }
 
     public static function createNonceStr($length = 16)
     {
