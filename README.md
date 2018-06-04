@@ -2,7 +2,7 @@
 1、微信H5支付
 - 安装
 ```
-composer require rxlisbest/weipay ~1.0.3
+composer require rxlisbest/weipay ~1.0.2
 ```
 - 用法
 ```
