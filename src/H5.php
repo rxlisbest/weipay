@@ -84,7 +84,7 @@ class H5
             'nonce_str' => self::createNonceStr(),
             'notify_url' => $this->notifyUrl,
             'out_trade_no' => $this->outTradeNo,
-            'spbill_create_ip' => $_SERVER['REMOTE_ADDR'],
+            'spbill_create_ip' => $this->get_client_ip(),
             'total_fee' => intval($this->totalFee * 100),       //单位 转为分
             'trade_type' => 'MWEB',
             'scene_info'=>json_encode($scene_info)
@@ -100,6 +100,23 @@ class H5
             return $unifiedOrder->mweb_url;
         }
         exit('error');
+    }
+
+    public function get_client_ip(){
+        if(getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'),'unknown')) {
+            $ip = getenv('HTTP_CLIENT_IP');
+        }
+        elseif(getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'),'unknown')) {
+            $ip = getenv('HTTP_X_FORWARDED_FOR');
+        }
+        elseif(getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'),'unknown')) {
+            $ip = getenv('REMOTE_ADDR');
+        }
+        elseif(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+
+        return preg_match ( '/[\d\.]{7,15}/', $ip, $matches ) ? $matches [0] : '';
     }
 
 //    public static function curlPost($url = '', $postData = '', $options = array())
