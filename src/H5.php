@@ -11,6 +11,7 @@ use anlutro\cURL\cURL;
 
 class H5
 {
+    protected $unifiedorder_url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
     protected $mchid;
     protected $appid;
     protected $apiKey;
@@ -91,7 +92,7 @@ class H5
         );
         $unified['sign'] = self::getSign($unified, $config['key']);
         $curl = new cURL();
-        $responseXml = $curl->rawPost('https://api.mch.weixin.qq.com/pay/unifiedorder', self::arrayToXml($unified));
+        $responseXml = $curl->rawPost($this->unifiedorder_url, self::arrayToXml($unified));
         $unifiedOrder = simplexml_load_string($responseXml, 'SimpleXMLElement', LIBXML_NOCDATA);
         if ($unifiedOrder->return_code != 'SUCCESS') {
             die($unifiedOrder->return_msg);
@@ -118,28 +119,6 @@ class H5
 
         return preg_match ( '/[\d\.]{7,15}/', $ip, $matches ) ? $matches [0] : '';
     }
-
-//    public static function curlPost($url = '', $postData = '', $options = array())
-//    {
-//        if (is_array($postData)) {
-//            $postData = http_build_query($postData);
-//        }
-//        $ch = curl_init();
-//        curl_setopt($ch, CURLOPT_URL, $url);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//        curl_setopt($ch, CURLOPT_POST, 1);
-//        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-//        curl_setopt($ch, CURLOPT_TIMEOUT, 30); //设置cURL允许执行的最长秒数
-//        if (!empty($options)) {
-//            curl_setopt_array($ch, $options);
-//        }
-//        //https请求 不验证证书和host
-//        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-//        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-//        $data = curl_exec($ch);
-//        curl_close($ch);
-//        return $data;
-//    }
 
     public static function createNonceStr($length = 16)
     {
