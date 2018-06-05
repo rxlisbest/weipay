@@ -28,7 +28,7 @@ $wxPay->setNotifyUrl($notifyUrl);
 $wxPay->setWapUrl($wapUrl);
 $wxPay->setWapName($wapName);
 $mwebUrl= $wxPay->createJsBizPackage();
-$url = json_decode(json_encode($mwebUrl), true)[0]);
+$url = json_decode(json_encode($mwebUrl), true)[0];
 $url .= '&redirect_url=' . urlencode('http://xxxxx'); // 支付成功后跳转
 header('Location: ' . $url);
 ```
